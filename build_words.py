@@ -18,7 +18,7 @@ with open(path, 'r', encoding='utf-8') as f_dictionary:
 # Words we never want to show up in the dictionary:
 # ***Trigger Warning***  The following words may be offensive or triggering
 sensitive_words = ["fucks", "shits", "cunts", "spiks", "spics", "spick", "kikes", "chink", "gooks", "whore", "sluts",
-                   "negro", "bitch", "vulva", "penis", "slave", "narcs", "narks", "pimps", "rapes", "fetus"]
+                   "negro", "bitch", "vulva", "penis", "slave", "narcs", "narks", "pimps", "rapes", "fetus", "porno"]
 # ... and probably a lot more I can't think of
 
 # Only five English letters and a LF (how to remove plurals?)
