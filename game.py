@@ -7,8 +7,8 @@ class Game:
         self.guesses = []
         self.not_used = ""
         self.no_letter = lambda letter: colored(letter, attrs=['underline'])
-        self.right_place = lambda letter: colored(letter, 'green', 'on_light_grey', attrs=['bold'])
-        self.in_word = lambda letter: colored(letter, 'red', attrs=['bold'])
+        self.right_place = lambda letter: colored(letter, 'white', 'on_green', attrs=['bold'])
+        self.in_word = lambda letter: colored(letter, 'light_red', attrs=['bold'])
         
     # Play one game of Wordle
     # Returns True if the user wants to quit
@@ -29,9 +29,15 @@ class Game:
             if guess == "/display":
                 self.display_all(word_to_guess)
                 continue
+            if guess == "/admin":
+                word_to_guess = input("Enter new word to guess: ")
+                guess_no = 1
+                self.guesses = []
+                self.not_used = "abcdefghijklmnopqrstuvwxyz"
+                continue
             if guess == word_to_guess:
                 print(f"You guessed the word in {guess_no} guesses!")
-                return
+                return False
 
             self.guesses.append(guess)
             for letter in guess:
