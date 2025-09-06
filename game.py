@@ -100,7 +100,7 @@ class Game:
                     display += self.no_letter(guess[index].upper()) + ' '
                 else:
                     display += self.in_word(guess[index].upper()) + ' '
-                processed_letters.append(guess[index])
+            processed_letters.append(guess[index])
 
         return display
     
