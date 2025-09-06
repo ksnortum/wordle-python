@@ -67,7 +67,7 @@ class Game:
 
         while invalid:
             guess = input("Enter your guess: ")
-            if guess in ("/quit", "/display", "/help"): 
+            if guess in ("/quit", "/display", "/help", "/admin"): 
                 break
             if len(guess) != 5:
                 print("You must enter a five-letter word.")
@@ -90,13 +90,24 @@ class Game:
         display = ""
         processed_letters = []
         for index in range(5):
-            if guess[index] in processed_letters or guess[index] not in word_to_guess:
+            if guess[index] == word_to_guess[index]:
+                display += self.right_place(guess[index].upper()) + ' '
+            elif guess[index] in processed_letters or guess[index] not in word_to_guess:
                 display += self.no_letter(guess[index].upper()) + ' '
             else:
-                if guess[index] == word_to_guess[index]:
-                    display += self.right_place(guess[index].upper()) + ' '
+                # We know the letter is in the word, but there may be an exact match later
+                if (self.exact_match_later(guess, word_to_guess, index)):
+                    display += self.no_letter(guess[index].upper()) + ' '
                 else:
                     display += self.in_word(guess[index].upper()) + ' '
                 processed_letters.append(guess[index])
 
         return display
+    
+    def exact_match_later(self, guess: str, word_to_guess: str, index: int) -> bool:
+        letter = guess[index]
+        for later_index in range(index + 1, 5):
+            if guess[later_index] == letter and word_to_guess[later_index] == letter:
+                return True
+            
+        return False
