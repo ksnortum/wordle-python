@@ -89,18 +89,25 @@ class Game:
     def display_word_to_guess(self, guess: str, word_to_guess: str) -> str:
         display = ""
         processed_letters = []
+
         for index in range(5):
-            if guess[index] == word_to_guess[index]:
-                display += self.right_place(guess[index].upper()) + ' '
-            elif guess[index] in processed_letters or guess[index] not in word_to_guess:
-                display += self.no_letter(guess[index].upper()) + ' '
+            letter = guess[index]
+            display_letter = letter.upper()
+
+            if letter == word_to_guess[index]:
+                display += self.right_place(display_letter) + ' '
+            elif letter in processed_letters or letter not in word_to_guess:
+                display += self.no_letter(display_letter) + ' '
             else:
                 # We know the letter is in the word, but there may be an exact match later
-                if (self.exact_match_later(guess, word_to_guess, index)):
-                    display += self.no_letter(guess[index].upper()) + ' '
+                if self.exact_match_later(guess, word_to_guess, index):
+                    display += self.no_letter(display_letter) + ' '
                 else:
-                    display += self.in_word(guess[index].upper()) + ' '
-            processed_letters.append(guess[index])
+                    display += self.in_word(display_letter) + ' '
+
+            # Only consider a letter processed if it doesn't appear later in the guess
+            if letter not in word_to_guess[index + 1:]:
+                processed_letters.append(letter)
 
         return display
     
