@@ -2,17 +2,26 @@ from termcolor import colored
 from words import Word
 
 class Game:
+    """ Class to play one game of Wordle. """
+
     def __init__(self):
+        """ Initialize the Game class. """
         self.words = Word()
         self.guesses = []
         self.not_used = ""
         self.no_letter = lambda letter: colored(letter, attrs=['underline'])
         self.right_place = lambda letter: colored(letter, 'white', 'on_green', attrs=['bold'])
         self.in_word = lambda letter: colored(letter, 'light_red', attrs=['bold'])
-        
-    # Play one game of Wordle
-    # Returns True if the user wants to quit
+
     def play(self, first_time: bool) -> bool:
+        """Play a game of Wordle.
+
+        Args:
+            first_time (bool): Whether this is the first time the user is playing.
+
+        Returns:
+            bool: True if the user wants to quit, False otherwise.
+        """
         guess_no = 1
         self.guesses = []
         self.not_used = "abcdefghijklmnopqrstuvwxyz"
@@ -50,6 +59,7 @@ class Game:
         return False
 
     def help(self) -> None:
+        """Display help information about the game."""
         print("Wordle is a game where you try to guess a five-letter word.")
         print("After each guess, you will see a display of your guess.")
         print("Each letter in the display means something:")
@@ -62,6 +72,11 @@ class Game:
         print("Good luck!")
 
     def get_guess(self) -> str:
+        """Get a valid guess from the user. /quit, /help, and /display are also valid commands.
+
+        Returns:
+            str: The user's guess.
+        """
         guess = ""
         invalid = True
 
@@ -80,6 +95,12 @@ class Game:
         return guess
     
     def display_all(self, word_to_guess: str) -> None:
+        """
+        Display all the user's guesses so far and unused letters.
+
+        Args:
+            word_to_guess (str): The word the user is trying to guess.
+        """
         for guess in self.guesses:
             print(self.display_word_to_guess(guess, word_to_guess))
         print("You are on guess", len(self.guesses))
@@ -87,6 +108,16 @@ class Game:
         print("Unused letters:", unused_letters)
 
     def display_word_to_guess(self, guess: str, word_to_guess: str) -> str:
+        """
+        Display the user's guess and its relation to the word to guess.
+
+        Args:
+            guess (str): The user's guess.
+            word_to_guess (str): The word the user is trying to guess.
+
+        Returns:
+            str: A string representation of the guess's relation to the word to guess.
+        """
         display = ""
         processed_letters = []
 
@@ -94,8 +125,10 @@ class Game:
             letter = guess[index]
             display_letter = letter.upper()
 
+            # Guessed letter is in the right place
             if letter == word_to_guess[index]:
                 display += self.right_place(display_letter) + ' '
+            # Guessed letter is not in the word or has already been processed
             elif letter in processed_letters or letter not in word_to_guess:
                 display += self.no_letter(display_letter) + ' '
             else:
@@ -105,13 +138,25 @@ class Game:
                 else:
                     display += self.in_word(display_letter) + ' '
 
-            # Only consider a letter processed if it doesn't appear later in the guess
+            # Only consider a letter processed if it doesn't appear later in the guess.
+            # (Letter may appear twice or three time in the word to guess.)
             if letter not in word_to_guess[index + 1:]:
                 processed_letters.append(letter)
 
         return display
     
     def exact_match_later(self, guess: str, word_to_guess: str, index: int) -> bool:
+        """
+        Check if there is an exact match for the guessed letter after the index in the word.
+
+        Args:
+            guess (str): The user's guess.
+            word_to_guess (str): The word the user is trying to guess.
+            index (int): The index of the letter to check.
+
+        Returns:
+            bool: True if there is an exact match later, False otherwise.
+        """
         letter = guess[index]
         for later_index in range(index + 1, 5):
             if guess[later_index] == letter and word_to_guess[later_index] == letter:
